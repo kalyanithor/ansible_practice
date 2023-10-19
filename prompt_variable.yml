@@ -1,0 +1,14 @@
+---
+- name: my prompt playbook
+  hosts: all
+  vars_prompt:
+    - name: in prompt
+      prompt: "hello everyone"
+      private: no
+      tasks:
+        - name: variable task
+          debug:
+            msg: "{{now ew are learning ansible}}"
+...              
+
+

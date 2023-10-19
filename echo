@@ -1,0 +1,8 @@
+---
+- name: my file varible
+  hosts: all
+  var_file: kalyani.yml
+  tasks:
+    - name: file task
+      debug:
+        msg: "{{URL}}"
