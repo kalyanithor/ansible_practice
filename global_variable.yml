@@ -1,0 +1,11 @@
+---
+- name: first task on global variable playbook
+  hosts: all
+  vars:
+   URL: www.office.com
+  tasks:
+    - name: global variable task
+      debug:
+       msg: "{{URL}}" 
+...
+
