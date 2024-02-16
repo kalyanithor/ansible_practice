@@ -1,0 +1,183 @@
+# global variables
+---
+- name: variable playbook
+  hosts: all
+  vars:
+    name: devops
+    URL: www.cloudtechnologies.com
+  tasks: 
+   - name: print
+     debug: 
+       msg: "hello all !! we are learning{{name}} from {{URL}}"
+
+       --------------------------------------------------------
+#(variabe by file) (URL and name wil bi in data.yml file)
+---
+- name: variable playbook
+  hosts: all
+  var_files:
+    - data.yml
+
+  tasks: 
+   - name: print the content
+     debug: 
+       msg: "hello all !! we are learning{{name}} from {{URL}}"
+
+       ------------------------------------------------------
+
+---
+- name: variable playbook
+  hosts: all
+  vars_prompt:
+    - name: tech_name
+      prompt: "technology name:"
+      private: no
+
+  tasks: 
+   - name: print the content
+     debug: 
+       msg: "hello all !! we are learning{{tech_name}}"
+
+-------------------------------------------------------
+
+# copy file frome one server to all other servers
+---
+- name: variable playbook
+  hosts: all
+  tasks:
+  - name: copy file
+    copy:
+      src: /home/ubuntu/project/abc.txt
+      dest: /home/ubuntu
+
+      ----------------------------------
+# installing any package
+---
+- name: variable playbook
+  hosts: all
+  become: true
+    tasks:
+      - name: install nginx
+         apt:
+         name: nginx 
+         state: latest
+
+      --------------------------------   
+
+# editing new file and creating it
+---
+- name: variable playbook
+  hosts: all
+  tasks:
+     - name: insert data in file
+       blockinfile:
+       path: /home/ubuntu/demo.txt
+       create: true
+       block:
+        hello all !! we are learning devops.
+        and writing playbook.
+
+  -----------------------------------------
+# register module
+---
+- name: registered variable playbook
+  hosts: all
+  tasks:
+     - name: run a shell command and registe its o/p
+       shell: uptime
+       register: data
+       ignore_errors: true
+     - name: print the content
+       debug: 
+         msg: "uptime of node is {{data}}"
+         
+-----------------------------------------
+# info of ansible
+---
+- name: details of node
+  hosts: all
+  tasks:
+    - name: name of distribution
+       debug: 
+         msg: "the o/s user by node is {{ansile_distribution}}"
+
+---------------------------------------------------
+# condition
+---
+- name: details of node
+  hosts: all
+  tasks:
+    - name: name of distribution
+       debug: 
+         msg: "the o/s user by node is {{ansile_distribution}}"
+       when: ansible_distribution_file_variety == "Debian"
+
+--------------------------------------------------------------
+# condition with gates
+---
+- name: details of node
+  hosts: all
+  tasks:
+    - name: name of distribution
+       debug: 
+         msg: "the o/s user by node is {{ansile_distribution}}"
+       when: ansible_distribution_file_variety == "Debian" and ansible_distribution_major_version == "22"
+
+---------------------------------------------------------------------
+# condition  with or 
+---
+- name: details of node
+  hosts: all
+  tasks:
+    - name: name of distribution
+       debug: 
+         msg: "the o/s user by node is {{ansile_distribution}}"
+       when: ansible_distribution_file_variety == "Debian" or ansible_distribution_major_version == "22"
+
+----------------------------------------------------------------------
+# ignore errors
+---
+- name: ignore_errors
+  hosts: all
+  tasks:
+    - name: print the msg
+       debug: 
+         msg: "hello all"
+
+    - name: finding java processes
+      shell: ps elf | grep java | grep -v grep
+      ignore_errors: true
+
+    - name: insert data in file
+      blockinfile:
+       path: /home/ubuntu/demo.txt
+       create: true
+       block:
+        hello all !! we are learning devops.
+        and writing playbook.
+
+  --------------------------------------------------------
+
+# calling functions by tags
+---
+- name: ignore_errors
+  hosts: all
+  tasks:
+    - name: print the msg
+       debug: 
+         msg: "hello all"
+      tag: print  
+
+    - name: finding java processes
+      shell: ps elf | grep java | grep -v grep
+      ignore_errors: true
+      tag: java
+
+    - name: insert data in file
+      blockinfile:
+       path: /home/ubuntu/demo.txt
+       create: true
+       block:
+        hello all !! we are learning devops.
+        and writing playbook.
+      tag: add
